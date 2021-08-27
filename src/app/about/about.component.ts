@@ -32,9 +32,9 @@ export class AboutComponent implements OnInit {
     of values containing the click event
   */
 
-      document.addEventListener('click', evt => {
-        console.log(evt)
-      })
+      // document.addEventListener('click', evt => {
+      //   console.log(evt)
+      // });
 
       /*
         F12
@@ -48,11 +48,11 @@ export class AboutComponent implements OnInit {
       // then we will ini to 0 and
       // we are going to emit a new value over time
       // and increment the counter each time that we emit our value
-      let counter = 0;
-      setInterval(() => {
-        console.log(counter);
-        counter++;
-      }, 1000);
+      // let counter = 0;
+      // setInterval(() => {
+      //   console.log(counter);
+      //   counter++;
+      // }, 1000);
 
 
   /* now we have 2 independent streams of values
@@ -65,12 +65,15 @@ export class AboutComponent implements OnInit {
   // setTimeout emits a value and completes
   // the other 2 emit multiple values and never complete
 
-  setTimeout(() => {
-    console.log('finished ... ')
-  }, 3000)
+      const interval$ = timer(3000, 1000);
 
-  }
-}
+      const sub = interval$.subscribe(
+        val => console.log("stream 1: " + val));
+
+      setTimeout(() =>
+        sub.unsubscribe(), 5000);
+
+      
 
 /*
 setInterval continuesly emits the values
@@ -115,3 +118,14 @@ Video 6 - what is Rxjs and what problem it solves
       you will see a duplicate execution
       if you click on the screen multiple times
 */
+
+      const click$ = fromEvent(document, 'click');
+
+      click$.subscribe(
+        evt => console.log(evt),
+        err => console.log(err),
+        () => console.log("completed")
+      );
+
+  }
+}
