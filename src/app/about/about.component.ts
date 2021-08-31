@@ -19,12 +19,20 @@ import {createHttpObservable} from '../common/util';
 
 
 @Component({
-    selector: 'about',
-    templateUrl: './about.component.html',
-    styleUrls: ['./about.component.css']
+  selector: 'about',
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
 
   ngOnInit() {
-      
+
+
+    /**
+     * Of() is very useful for defining all sorts of observables
+     */
+    const source1$ = of(1, 2, 3);
+    const source2$ = of(4, 5, 6);
   }
+
+}
