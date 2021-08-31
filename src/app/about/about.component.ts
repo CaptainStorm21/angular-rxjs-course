@@ -31,10 +31,27 @@ export class AboutComponent implements OnInit {
     /**
      * Of() is very useful for defining all sorts of observables
      */
+    const source0$ = interval(3000);
     const source1$ = of(1, 2, 3);
     const source2$ = of(4, 5, 6);
+    const source3$ = of(7, 8, 9);
 
-    
+    /**
+     * source1$ completes then concats source2$
+     * both must complete
+     */
+
+    const result$ = concat(
+      source0$,
+      source1$,
+      source2$,
+      source3$
+    );
+
+    result$.subscribe(
+      console.log
+    );
+
   }
 
 }
