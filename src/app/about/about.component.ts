@@ -33,6 +33,8 @@ export class AboutComponent implements OnInit {
      */
     const source1$ = of(1, 2, 3);
     const source2$ = of(4, 5, 6);
+
+    
   }
 
 }
