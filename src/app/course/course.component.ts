@@ -26,7 +26,7 @@ import {Store} from '../common/store.service';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-    courseId: number;
+    courseId: string;
     course$: Observable<Course>;
     lessons$: Observable<Lesson[]>;
 
@@ -39,10 +39,11 @@ export class CourseComponent implements OnInit, AfterViewInit {
       this.courseId = this.route.snapshot.params['id'];
       // this.course$ = this.store.selectCourseById(this.courseId);
       this.course$ = createHttpObservable(`/api/courses/${this.courseId}`);
-      this.lessons$ = createHttpObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100`)
-        .pipe(
-          map(res => res['payload'])
-        );
+      // this.lessons$ = this.loadLessons();
+        // createHttpObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100`)
+        // .pipe(
+        //   map(res => res['payload'])
+        // );
 
     }
 
@@ -54,12 +55,15 @@ export class CourseComponent implements OnInit, AfterViewInit {
                 debounceTime(400),
                 distinctUntilChanged(),
                 switchMap(search => this.loadLessons(search))
-            );
+      );
 
+      // this.lessons$ = this.loadLessons();
         const initialLessons$ = this.loadLessons();
         this.lessons$ = concat(initialLessons$, searchLessons$);
 
-    }
+  }
+
+
 
     loadLessons(search = ''): Observable<Lesson[]> {
         return createHttpObservable(
