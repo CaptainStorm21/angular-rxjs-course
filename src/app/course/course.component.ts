@@ -26,25 +26,23 @@ import {Store} from '../common/store.service';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-    courseId:number;
-
-    course$ : Observable<Course>;
-
+    courseId: number;
+    course$: Observable<Course>;
     lessons$: Observable<Lesson[]>;
 
-
-    @ViewChild('searchInput', { static: true }) input: ElementRef;
-
-    constructor(private route: ActivatedRoute, private store: Store) {
-
-
+    @ViewChild('searchInput') input: ElementRef;
+    constructor(private route: ActivatedRoute) {
     }
 
     ngOnInit() {
 
-        this.courseId = this.route.snapshot.params['id'];
-
-        this.course$ = this.store.selectCourseById(this.courseId);
+      this.courseId = this.route.snapshot.params['id'];
+      // this.course$ = this.store.selectCourseById(this.courseId);
+      this.course$ = createHttpObservable(`/api/courses/${this.courseId}`);
+      this.lessons$ = createHttpObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100`)
+        .pipe(
+          map(res => res['payload'])
+        );
 
     }
 
@@ -59,7 +57,6 @@ export class CourseComponent implements OnInit, AfterViewInit {
             );
 
         const initialLessons$ = this.loadLessons();
-
         this.lessons$ = concat(initialLessons$, searchLessons$);
 
     }
