@@ -2,7 +2,7 @@ import {Observable} from 'rxjs';
 
 
 export function createHttpObservable(url:string) {
-    return new Observable(observer => {
+    return new Observable <any>(observer => {
 
         const controller = new AbortController();
         const signal = controller.signal;

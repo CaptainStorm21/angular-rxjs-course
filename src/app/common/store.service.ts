@@ -27,8 +27,9 @@ export class Store {
                 tap(() => console.log('HTTP request executed')),
                 map(res => Object.values(res['payload']))
             )
-            .subscribe(
-                courses => this.subject.next(courses)
+          .subscribe(
+              // fix for Type '{}' is missing the following properties from type
+                (courses:Course[]) => this.subject.next(courses)
             );
     }
 
@@ -40,10 +41,10 @@ export class Store {
         return this.filterByCategory('ADVANCED');
     }
 
-    selectCourseById(courseId:number) {
+    selectCourseById(courseId: number) {
         return this.courses$
             .pipe(
-                map(courses => courses.find(course => course.id == courseId)),
+                map(courses => courses.find(course => course.id === courseId)),
                 filter(course => !!course)
 
             );
@@ -53,11 +54,11 @@ export class Store {
         return this.courses$
             .pipe(
                 map(courses => courses
-                    .filter(course => course.category == category))
+                    .filter(course => course.category === category))
             );
     }
 
-    saveCourse(courseId:number, changes): Observable<any> {
+    saveCourse(courseId: number, changes): Observable<any> {
 
         const courses = this.subject.getValue();
 
