@@ -49,21 +49,6 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
   }
 
-  /**
-   *  we are going to be writing is a debug operator
-   * that is going to help us a lot to debug our RXJS program
-   *
-   * So sometimes in order to better understand the program
-   * and especially to troubleshoot a problem, we often use the
-   * tap operator for producing debugging logging statements.
-   * For example, in the case of these observable, we would like
-   * to log here through the console, the search value that
-   * we are receiving here in the top operator.
-   * So this corresponds to the search string that you type
-   * here in the type ahead. In the case of the course observable,
-   * we might want to log to the console what we are receiving from
-   * the backend.
-   */
 
   ngAfterViewInit() {
     this.lessons$ = fromEvent<any>(this.input.nativeElement, 'keyup')
