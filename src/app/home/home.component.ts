@@ -36,7 +36,31 @@ export class HomeComponent implements OnInit {
             console.log("Error occurred", err);
             // check console in F12
             return throwError(err);
-          } )
+          }),
+          /**
+           * Let's now talk about clean up logic.
+           * Let's say that, for example, we have here these observable causes
+           * that might either fail or it might complete.
+           * And we would like in both cases to do some sort of cleanup operation.
+           * This could be to close a network.
+           * Action release and memory resource or some other common cleanup
+           * operation NREGS, we can implement that type of cleanup logic by
+           * using the finalize operator, these operator is going to take a
+           * function that is going to get invoked in one of two cases.
+           * This function is going to get executed when these observable here
+           * completes or when it arrives out.
+           * Let's try these out.
+           * We are going to add here a logging statement so that we can see
+           * that finalized was indeed executed.
+           * Let's try this out.
+           * We are going to switch here to the screen and keep an eye here on the console.
+           * So as you can see, we got here a first air that was frozen, finalized,
+           * was executed. And we can see that because these observable is getting
+           * subscribed twice, one in the beginning and the other on the advanced step.
+           */
+          finalize(() => {
+            console.log('Finalize Executed ...');
+          })
 
       );
 
