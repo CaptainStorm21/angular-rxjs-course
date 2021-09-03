@@ -28,39 +28,57 @@ export class HomeComponent implements OnInit {
 
       const courses$: Observable<any> = http$
         .pipe(
-          tap(() => console.log("http request executed")),
-          map(res => Object.values(res["payload"])),
-          shareReplay(),
           catchError(err => {
             // we are handling the error locally
             console.log("Error occurred", err);
             // check console in F12
             return throwError(err);
           }),
-          /**
-           * Let's now talk about clean up logic.
-           * Let's say that, for example, we have here these observable causes
-           * that might either fail or it might complete.
-           * And we would like in both cases to do some sort of cleanup operation.
-           * This could be to close a network.
-           * Action release and memory resource or some other common cleanup
-           * operation NREGS, we can implement that type of cleanup logic by
-           * using the finalize operator, these operator is going to take a
-           * function that is going to get invoked in one of two cases.
-           * This function is going to get executed when these observable here
-           * completes or when it arrives out.
-           * Let's try these out.
-           * We are going to add here a logging statement so that we can see
-           * that finalized was indeed executed.
-           * Let's try this out.
-           * We are going to switch here to the screen and keep an eye here on the console.
-           * So as you can see, we got here a first air that was frozen, finalized,
-           * was executed. And we can see that because these observable is getting
-           * subscribed twice, one in the beginning and the other on the advanced step.
-           */
+          // if we want only one HTTP request
           finalize(() => {
             console.log('Finalize Executed ...');
-          })
+          }),
+          tap(() => console.log("http request executed")),
+          map(res => Object.values(res["payload"])),
+          shareReplay(),
+          /**
+           * We're going to get here two errors getting executed and
+           * we are going to get here.The finalized method, getting twice
+           * executive as expected.
+           * If this is not the behavior that you are looking for,
+           * if you want the error handler to get executed only once instead,
+           * then what we need to do is to move the catch error block up the
+           * observable chain.
+           * So instead of doing the catch error here, the output of share
+           * replay that we are going to have this shared between the two
+           * subscriptions, we can instead take here the catch error block
+           * and move this here immediately after invoking the HTP observable.
+           *
+           * So this way, the whole observable chain is going to be bypassed
+           * and we will not get here to this mapping operation and we will
+           * not get here to the share replay.
+           * Operator, let's try this new logic we are going to have over
+           * here to the home component and we are going to see that indeed
+           * here this time around. The error handling block of catch
+           * error was only executed once, but we still have here finalize being
+           * executed twice.
+           *
+           * This is as expected because we got here two subscriptions to these
+           * observable here. So two times the observable was finished because
+           * both subscriptions were terminated.
+           * If we want finalized to be handled only once per HTP request,
+           * then we will move the finalized block here and place it before
+           * the share a replay operator.
+           * And this is one thing that is general to the catch error and
+           * to the finalize operators.
+           *
+           * home component -
+           * const courses$: Observable<Course[]>
+           */
+          // if we want 2 finanze statements
+          // finalize(() => {
+          //   console.log('Finalize Executed ...');
+          // })
 
       );
 
