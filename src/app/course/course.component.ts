@@ -17,7 +17,7 @@ import {merge, fromEvent, Observable, concat, interval} from 'rxjs';
 import {Lesson} from '../model/lesson';
 import {createHttpObservable} from '../common/util';
 import {Store} from '../common/store.service';
-import { RxJsLoggingLevel } from '../common/debug';
+import { RxJsLoggingLevel, setRxJsLoggingLevel } from '../common/debug';
 import { debug } from '../common/debug';
 
 
@@ -41,8 +41,11 @@ export class CourseComponent implements OnInit, AfterViewInit {
     this.courseId = this.route.snapshot.params['id'];
     this.course$ = createHttpObservable(`/api/courses/${this.courseId}`)
       .pipe(
-        tap (course => console.log(course))
-      );
+        // tap (course => console.log(course))
+        debug (RxJsLoggingLevel.INFO, "course value")
+    );
+    setRxJsLoggingLevel(RxJsLoggingLevel.DEBUG);
+    setRxJsLoggingLevel(RxJsLoggingLevel.TRACE);
 
   }
 
@@ -63,15 +66,16 @@ export class CourseComponent implements OnInit, AfterViewInit {
    */
 
   ngAfterViewInit() {
-    const searchLessons$ = fromEvent<any>(this.input.nativeElement, 'keyup')
+    this.lessons$ = fromEvent<any>(this.input.nativeElement, 'keyup')
       .pipe(
         map(event => event.target.value),
-        debounceTime(400),
         startWith(''),
-        debug( RxJsLoggingLevel.INFO, 'search'),
+        debug(RxJsLoggingLevel.TRACE, 'search'),
+        debounceTime(400),
         // tap(search => console.log('search', search)),
         distinctUntilChanged(),
-        switchMap(search => this.loadLessons(search))
+        switchMap(search => this.loadLessons(search)),
+        debug(RxJsLoggingLevel.DEBUG, 'lesson value '),
       );
   }
 
