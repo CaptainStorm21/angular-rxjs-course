@@ -47,23 +47,29 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     }
 
-    ngAfterViewInit() {
+  ngAfterViewInit() {
 
-        const searchLessons$ =  fromEvent<any>(this.input.nativeElement, 'keyup')
-            .pipe(
-                map(event => event.target.value),
-                debounceTime(400),
-                distinctUntilChanged(),
-                switchMap(search => this.loadLessons(search))
+    //   const searchLessons$ =  fromEvent<any>(this.input.nativeElement, 'keyup')
+    //       .pipe(
+    //           map(event => event.target.value),
+    //           debounceTime(400),
+    //           distinctUntilChanged(),
+    //           switchMap(search => this.loadLessons(search))
+    // );
+
+    // this.lessons$ = this.loadLessons();
+    // const initialLessons$ = this.loadLessons();
+    // this.lessons$ = concat(initialLessons$, searchLessons$);
+
+    this.lessons$ = fromEvent<any>(this.input.nativeElement, 'keyup')
+      .pipe(
+        map(event => event.target.value),
+        startWith(),
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap(search => this.loadLessons(search))
       );
-
-      // this.lessons$ = this.loadLessons();
-        const initialLessons$ = this.loadLessons();
-        this.lessons$ = concat(initialLessons$, searchLessons$);
-
   }
-
-
 
     loadLessons(search = ''): Observable<Lesson[]> {
         return createHttpObservable(
@@ -72,10 +78,23 @@ export class CourseComponent implements OnInit, AfterViewInit {
                 map(res => res["payload"])
             );
     }
-
-
 }
 
+/**
+ * In this lesson, we are going to further simplify our course component.
+ * We are going to refactor it so that it uses the start with operator.
+ * Now let's switch over here to our course component and see here
+ * these new logic in action.So as you can see, after refreshing the
+ * application we get here, our initial results, and if we not
+ * type here, let's say, for example, welcome, we are going to
+ * see that our search results are still getting displayed as expected.
+ * But we now have implemented the logic with a lot less code using
+ * the start with operator.And with these, we have completed
+ * the implementation of our course component.
+ * What we are going to do next is we are going to learn how to build
+ * our own custom.Our guest operator, we're going to build the
+ * debugging facility operator.
+ */
 
 
 

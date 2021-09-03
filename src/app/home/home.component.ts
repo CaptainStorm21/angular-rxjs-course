@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
 
         // const courses$ = this.store.courses$;
-
         this.beginnerCourses$ = this.store.selectBeginnerCourses();
         this.advancedCourses$ = this.store.selectAdvancedCourses();
         // const http$ = createHttpObservable('/api/courses');
